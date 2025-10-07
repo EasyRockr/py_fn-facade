@@ -9,27 +9,14 @@ class ContactBll:
             "json": ContactsJsonDao()
         }
 
+    def get_service(self, source) -> ContactsABC:
+        obj = self.get_service_proxy_registry().get(source)
+        print(obj.__class__.mro())
+        print(isinstance(obj, ContactsABC))
+        return obj
+
     def retrieve_contacts(self, source):
-        obj: ContactsABC = self.get_service_proxy_registry().get({source})
-        print(obj.__class__.mro())  
-        print(isinstance(obj, ContactsABC))
-        return obj.retrieve_contacts()
-    
+        return self.get_service(source).retrieve_contacts()
+
     def search_contacts(self, source, keyword):
-        obj: ContactsABC = self.get_service_proxy_registry().get({source})
-        print(obj.__class__.mro())  
-        print(isinstance(obj, ContactsABC))
-        return obj.retrieve_contacts()
-
-        
-     
-        # key = f"retrieve_contacts_{source.lower()}"
-        # fn = self.get_service_proxy_registry().get(key)
-        # return fn()
-
-
-        # print(type(obj))
-       
-
-
-
+        return self.get_service(source).search_contacts(keyword)
