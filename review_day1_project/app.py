@@ -1,3 +1,3 @@
-from controller.address_book import display_contacts
+from controller.address_book import Contacts
 
-display_contacts("db")
+Contacts().display_contacts("db")
