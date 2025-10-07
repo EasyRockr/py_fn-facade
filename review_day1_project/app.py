@@ -1,8 +1,20 @@
 from controller.fx_controller import Fx
 
-try:
-    print("Fx App")
-    print("[1] View Available Rates")
-    Fx("json").display_rates()
-except Exception as ex:
-    print(f"Error in starting application: {str(ex)}")
+def main():
+    while True:
+        print("Fx App")
+        print("[1] View Available Rates")
+        print("[2] Convert Money")
+        option = input("option: ").strip()
+
+        fx = Fx("json")
+
+        if option == "1":
+            fx.display_rates()
+        elif option == "2":
+            fx.convert_money()
+        else:
+            print("Invalid option.")
+            
+if __name__ == "__main__":
+    main()
