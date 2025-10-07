@@ -1,17 +1,12 @@
-from dal.contacts_dal import ContactsJsonDao
-from dal.contacts_db_dal import ContactsDbDao
-from dal.abstract_contacts import ContactsABC
+from dal.fx_dal import FxJsonDao
+from dal.abstract_fx import FxABC
 
-class ContactsFactory:
-    def create_instance(self, source: str) -> ContactsABC:
+class FxFactory:
+    def create_instance(self, source: str) -> FxABC:
         obj_map = {
-            "db": ContactsDbDao,
-            "json": ContactsJsonDao
-            # "api" : ContactsApiDao
+            "json": FxJsonDao
         }
-
         dao_class = obj_map.get(source)
         if dao_class is None:
             raise Exception("Invalid Source")
-
         return dao_class()
