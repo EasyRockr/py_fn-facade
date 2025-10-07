@@ -6,7 +6,7 @@ class ContactsJsonDao(ContactsABC):
         return read_json_as_dict("contacts.json")
     
     def search_contacts(self, keyword):
-        data = read_json_as_dict("contacts.json")
+        data = self.retrieve_contacts()
         result = {"contacts": []}
         for record in data.get("contacts", []):
             if keyword.lower() in record.get("name", "").lower():

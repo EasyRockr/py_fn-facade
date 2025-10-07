@@ -1,19 +1,15 @@
 from bll.contacts_bll import ContactBll
 
-
 class Contacts:
-    def __init__(self):
-        print("## init!")
-        self.contact_bll = ContactBll()
+    def __init__(self, source="json"):
+        self.contact_bll = ContactBll(source)
 
-    def display_contacts(self, source):
-        print("## display_contacts!")
-        data = self.contact_bll.retrieve_contacts(source)
-        for record in data.get("contacts", []):
-            print(f"{record.get('name', '')}\t\t{record.get('contact_no', '')}")
+    def display_contacts(self):
+        self._do_display_result(self.contact_bll.retrieve_contacts().get("contacts",[]))
 
-    def search_contacts(self, source, keyword):
-        print("## search_contacts!")
-        data = self.contact_bll.search_contacts(source, keyword)
-        for record in data.get("contacts", []):
-            print(f"{record.get('name', '')}\t\t{record.get('contact_no', '')}")
+    def search_contacts(self, keyword):
+        self._do_display_result(self.contact_bll.search_contacts(keyword).get("contacts",[]))
+
+    def _do_display_result(self, records):
+         for record in records:
+            print(f"Name: {record.get('name', '')}\t\t Contact #:{record.get("contact_no")}")

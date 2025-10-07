@@ -13,11 +13,13 @@ class ContactsDbDao(DbDaoABC, ContactsABC):
         return result
 
     def search_contacts(self, keyword):
-        sql = "SELECT name, contact FROM contacts WHERE name LIKE ?"
+        sql = "SELECT name, contact FROM contacts"
         result = {"contacts": []}
-        for row in self.execute_select(sql, (f"%{keyword}%",)):
-            result["contacts"].append({
-                "name": row[0],
-                "contact_no": row[1]
-            })
+        for row in self.execute_select(sql):
+            if keyword in row[0]:  
+                result["contacts"].append({
+                    "name": row[0],
+                    "contact_no": row[1]
+                })
         return result
+

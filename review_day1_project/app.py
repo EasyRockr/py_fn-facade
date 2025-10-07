@@ -1,5 +1,11 @@
 from controller.address_book import Contacts
 
-Contacts().display_contacts("db")
+try:
+    Contacts("db").display_contacts()
+    Contacts("db").search_contacts("Jane")
+except Exception as ex:
+    print(f"Error in starting application: {str(ex)}")
 
-Contacts().search_contacts("json", "Franz")
+# oltp
+# put try catch in the main point, return business validation
+

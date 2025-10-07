@@ -1,22 +1,14 @@
-from dal.contacts_dal import ContactsJsonDao
-from dal.contacts_db_dal import ContactsDbDao
 from dal.abstract_contacts import ContactsABC
+from dal.dal_factory import ContactsFactory
 
 class ContactBll:
-    def get_service_proxy_registry(self):
-        return {
-            "db": ContactsDbDao(),
-            "json": ContactsJsonDao()
-        }
+    __contact_dao: ContactsABC
 
-    def get_service(self, source) -> ContactsABC:
-        obj = self.get_service_proxy_registry().get(source)
-        print(obj.__class__.mro())
-        print(isinstance(obj, ContactsABC))
-        return obj
+    def __init__(self, source: str):
+        self.__contact_dao = ContactsFactory().create_instance(source)
 
-    def retrieve_contacts(self, source):
-        return self.get_service(source).retrieve_contacts()
+    def retrieve_contacts(self):
+        return self.__contact_dao.retrieve_contacts()
 
-    def search_contacts(self, source, keyword):
-        return self.get_service(source).search_contacts(keyword)
+    def search_contacts(self, keyword: str):
+        return self.__contact_dao.search_contacts(keyword)

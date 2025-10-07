@@ -8,6 +8,11 @@ class DbDaoABC:
         db_path = os.path.abspath(db_path)
         return sqlite3.connect(db_path)
 
-    def execute_select(self, sql):
+    def execute_select(self, sql, params=None):
         with self._get_db_connection() as cnn:
-            return cnn.execute(sql)
+            cursor = cnn.cursor()
+            if params:
+                cursor.execute(sql, params)
+            else:
+                cursor.execute(sql)
+            return cursor.fetchall()
