@@ -1,0 +1,29 @@
+// citco@citco-HP-mt21-Mobile-Thin-Client:~/fadriano-python/review_day1_project$ python3
+// Python 3.12.3 (main, Aug 14 2025, 17:47:21) [GCC 13.3.0] on linux
+// Type "help", "copyright", "credits" or "license" for more information.
+// Ctrl click to launch VS Code Native REPL
+// >>> "Franz"
+// 'Franz'
+// >>> "abc".index("b")
+// 1
+// >>> "abc".index("x")
+// Traceback (most recent call last):
+//   File "<stdin>", line 1, in <module>
+// ValueError: substring not found
+// >>> 
+
+
+
+# index vs find
+
+index = ValueError
+*use find = negative
+
+
+
+FX APP
+
+[1] Views Available Rates
+[2] Convert Money
+Option _1_
+
