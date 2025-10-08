@@ -12,3 +12,9 @@ class ContactsJsonDao(ContactsABC):
             if keyword.lower() in record.get("name", "").lower():
                 result["contacts"].append(record)
         return result
+
+    def create_contacts(self, keyword):
+        result = {"contacts:": []}
+        new_contact = result["contacts"].append(keyword)
+
+        return new_contact

@@ -13,6 +13,24 @@ def display_contacts():
 def search_contacts(keyword: str):
     return contact_bll.search_contacts(keyword).get("contacts", [])
 
+@router.get("/contacts/create/{keyword}", response_model=list[Contact])
+def create_contacts(keyword: str):
+    return contact_bll.create_contacts(keyword).put("contacts", [])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # from basepath, we can create
 # app = FastAPI(title="Address Book API")

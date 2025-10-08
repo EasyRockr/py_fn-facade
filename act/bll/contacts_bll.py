@@ -12,3 +12,6 @@ class ContactBll:
 
     def search_contacts(self, keyword: str):
         return self.__contact_dao.search_contacts(keyword)
+
+    def create_contacts(self, keyword: str):
+        return self.contact_dao.create_contacts(keyword)
