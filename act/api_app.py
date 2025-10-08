@@ -18,6 +18,18 @@ app.mount("/api/v1", api_app)
 # graphql = parang sql, supports strawberry graphql
 # 
 
+# maven = pom
+# gradle = .grade
+# requirements.txt
+# pip freeze > requirements.txt
+
+# dont put venv in the source code
+# pip install -r requirements.txt
+# uvicorn api_app:app --port:9000
+
+# ecs 
+# cks on prem
+
 
 
 
