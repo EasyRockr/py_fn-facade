@@ -13,9 +13,17 @@ def display_contacts():
 def search_contacts(keyword: str):
     return contact_bll.search_contacts(keyword).get("contacts", [])
 
-@router.get("/contacts/create/{keyword}", response_model=list[Contact])
-def create_contacts(keyword: str):
-    return contact_bll.create_contacts(keyword).put("contacts", [])
+@router.put("/contacts/create/{name}/{contact_no}")
+def create_contacts(name: str, contact_no: str):
+    return contact_bll.create_contacts(name, contact_no)
+
+@router.post("/contacts/update/{record_name}/{name}/{contact_no}")
+def update_contacts(record_name: str, name: str, contact_no: str):
+    return contact_bll.update_contacts(record_name, name, contact_no)
+
+@router.delete("/contacts/delete/{record_name}")
+def delete_contact(record_name: str):
+    return contact_bll.delete_contacts(record_name)
 
 
 
