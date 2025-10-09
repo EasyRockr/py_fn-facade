@@ -21,3 +21,9 @@ ERROR:MyApp:This is an error
 2025-10-09 10:45:14,022 - [WARNING] - (logging_intro.py:15 - test_logs) - This is a warning
 2025-10-09 10:45:14,023 - [DEBUG] - (logging_intro.py:16 - test_logs) - This is a debug
 2025-10-09 10:45:14,023 - [ERROR] - (logging_intro.py:17 - test_logs) - This is an error
+2025-10-09 11:13:34,483 - [INFO] - (logging_intro.py:7 - <module>) - test1
+2025-10-09 11:13:34,484 - [INFO] - (logging_intro.py:8 - <module>) - test2
+2025-10-09 11:13:34,484 - [INFO] - (logging_intro.py:9 - <module>) - test3
+2025-10-09 11:16:56,907 - [INFO] - (address_book_api.py:13 - display_contacts) - Begin display contacts
+2025-10-09 11:18:20,380 - [INFO] - (address_book_api.py:18 - search_contacts) - Begin search contacts for [franz]
+2025-10-09 11:21:21,031 - [INFO] - (address_book_api.py:13 - display_contacts) - Begin display contacts

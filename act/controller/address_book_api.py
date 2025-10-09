@@ -1,16 +1,21 @@
 from fastapi import APIRouter
 from bll.contacts_bll import ContactBll
 from domain.contact import Contact
+from util.logger import Logger
 
 router = APIRouter(tags=["Contacts API"])
 contact_bll = ContactBll("json")
 
-@router.get("/contacts", response_model=list[Contact])
-def display_contacts():
+logger = Logger().get_logger()
+
+@router.get("/contacts")
+def display_contacts() -> list[Contact]:
+    logger.info("Begin display contacts")
     return contact_bll.retrieve_contacts().get("contacts", [])
 
 @router.get("/contacts/search/{keyword}", response_model=list[Contact]) 
 def search_contacts(keyword: str):
+    logger.info(f"Begin search contacts for [{keyword}]")
     return contact_bll.search_contacts(keyword).get("contacts", [])
 
 @router.put("/contacts/create/{name}/{contact_no}")

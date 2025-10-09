@@ -18,6 +18,8 @@ class Logger():
         return self.__logger
     
 
+    # telemetry logging
+
     # __counter = 0
     # def set_counter(self, value):
     #     self.__counter = value
