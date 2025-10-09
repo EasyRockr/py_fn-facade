@@ -1,0 +1,23 @@
+INFO:root:This is an info
+WARNING:root:This is a warning
+ERROR:root:This is an error
+INFO:MyApp:This is an info
+WARNING:MyApp:This is a warning
+DEBUG:MyApp:This is a debug
+ERROR:MyApp:This is an error
+2025-10-09 10:38:17,592 [INFO] (logging_intro.py:13) This is an info
+2025-10-09 10:38:17,592 [WARNING] (logging_intro.py:14) This is a warning
+2025-10-09 10:38:17,593 [DEBUG] (logging_intro.py:15) This is a debug
+2025-10-09 10:38:17,593 [ERROR] (logging_intro.py:16) This is an error
+2025-10-09 10:38:56,087 - [INFO] - (logging_intro.py:13) - This is an info
+2025-10-09 10:38:56,087 - [WARNING] - (logging_intro.py:14) - This is a warning
+2025-10-09 10:38:56,088 - [DEBUG] - (logging_intro.py:15) - This is a debug
+2025-10-09 10:38:56,088 - [ERROR] - (logging_intro.py:16) - This is an error
+2025-10-09 10:41:32,179 - [INFO] - (logging_intro.py:13) - This is an info
+2025-10-09 10:41:32,179 - [WARNING] - (logging_intro.py:14) - This is a warning
+2025-10-09 10:41:32,180 - [DEBUG] - (logging_intro.py:15) - This is a debug
+2025-10-09 10:41:32,180 - [ERROR] - (logging_intro.py:16) - This is an error
+2025-10-09 10:45:14,021 - [INFO] - (logging_intro.py:14 - test_logs) - This is an info
+2025-10-09 10:45:14,022 - [WARNING] - (logging_intro.py:15 - test_logs) - This is a warning
+2025-10-09 10:45:14,023 - [DEBUG] - (logging_intro.py:16 - test_logs) - This is a debug
+2025-10-09 10:45:14,023 - [ERROR] - (logging_intro.py:17 - test_logs) - This is an error
