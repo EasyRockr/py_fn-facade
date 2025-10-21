@@ -1,0 +1,16 @@
+
+key1: "string value"
+key2: 1 #this is a comment
+non_inline_key:
+  "non inline value"
+
+parent_key:
+  child_key1: "child value 1"
+  child_key2: "child value 2"
+  child_key3: 
+    key3_child: "key 3 value"
+
+array_key:
+  - "array_value_1"
+  - "array value 2"
+

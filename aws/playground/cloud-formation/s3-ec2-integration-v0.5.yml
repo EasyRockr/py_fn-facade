@@ -1,0 +1,96 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "S3 and EC2 Integration Sample"
+
+Parameters: 
+  s3BucketName: 
+    Type: String
+    Description: "The S3 Bucket Name"
+    Default: "fca-trn-s3-ec2-integration"
+
+  amiId:
+    Type: String
+    Description: "EC2 AMI ID"
+    Default: "ami-0341d95f75f311023"
+
+  ec2InstanceType:
+    Type: String
+    Description: "The EC2 Instance Type"
+    Default: "t3.micro"
+    AllowedValues:
+      - "t3.micro"
+      - "t3.small"
+
+  keyPairName:
+    Description: "EC2 KeyPair Name"
+    Type: String
+    Default: "aws-trn-2025"
+
+Resources: 
+  myS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref s3BucketName
+
+    ec2Instance0:
+    Type: AWS::EC2::Instance
+    Properties:
+      BlockDeviceMappings: 
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeSize: 8
+      ImageId: !Ref amiId
+      InstanceType: !Ref ec2InstanceType
+      KeyName: !Ref keyPairName
+      SecurityGroupIds: 
+        - !GetAtt ec2SecurityGroup0.GroupId
+
+  ec2SecurityGroup0:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "CFN Linux Server Security Group"
+      GroupName: "cfnLinuxSecGroup0"
+      SecurityGroupEgress: 
+        - CidrIp: "0.0.0.0/0"
+          FromPort: -1
+          IpProtocol: "-1"
+          ToPort: -1
+      SecurityGroupIngress: 
+        - CidrIp: "0.0.0.0/0"
+          Description: "Allow SSH"
+          FromPort: 22
+          IpProtocol: "tcp"
+          ToPort: 22
+      VpcId: "vpc-05da245b4e604a44c"
+
+  s3Ec2Role:
+    Type: AWS::IAM::Role
+    DependsOn: 
+      - myS3Bucket #only create teh role after the s3 bucket is created
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17" 
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Description: "S3 EC2 Integration Role using CFN"
+      RoleName: "s3Ec2RoleCfn"
+      Policies:
+        - PolicyName: "s3Ec2Policy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "s3:ListBucket"
+                  - "s3:GetObject"
+                  - "s3:PutObject"
+                Resource:
+                  - !GetAtt myS3Bucket.Arn
+                  - !Join [ "", [ !GetAtt myS3Bucket.Arn, "/*" ] ]
+
+
+

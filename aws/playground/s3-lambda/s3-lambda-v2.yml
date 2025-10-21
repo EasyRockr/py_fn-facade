@@ -1,0 +1,94 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "Sample Lambda function using CFN"
+
+Parameters:
+  functionName:
+    Description: "The Lambda Function Name"
+    Type: String
+    Default: "fnS3LambdaCfn"
+  s3Bucket:
+    Description: "The S3 Bucket of the Lambda function"
+    Type: String
+    Default: "fca-trn-cfn-scripts"
+  lambdaZipFile:
+    Description: "The Zip File in the bucket's lambda/ folder"
+    Type: String
+    Default: "s3_lambda-v0.zip"
+  lambdaHandler:
+    Description: "The Lambda Function Name"
+    Type: String
+    Default: "s3_lambda.Handler"
+  s3BucketToMonitor:
+    Description: "The S3 Bucket to Monitor the Events"
+    Type: String
+    Default: "fca-trn-s3lambda-int"
+
+Resources:
+  lambdaFunction:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !Ref s3Bucket
+        S3Key: !Join [ "/", [ "lambda", !Ref lambdaZipFile ] ]
+      Description: "Sample Lambda function using CFN"
+      FunctionName: !Ref functionName
+      Handler: !Ref lambdaHandler
+      Role: !GetAtt lambdaFunctionRole.Arn
+      Runtime: "python3.12"
+      Timeout: 60
+
+  lambdaFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17" 
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Description: !Join [ "", [ "IAM Role for", !Ref functionName, "lambda function" ] ]
+      RoleName: !Join [ "-", [ !Ref functionName, "lambda", "role" ] ] # this is just the name
+      Policies:
+        - PolicyName: !Join [ "-", [ !Ref functionName, "execution", "policy" ] ]
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogGroup"
+                Resource:
+                  - "arn:aws:logs:*:*:*"
+
+              - Effect: "Allow"
+                Action:
+                  - "logs:CreateLogStream"
+                  - "logs:PutLogEvents"
+                Resource:
+                  - !Join [ "", [ "arn:aws:logs:*:*:log-group:/aws/lambda/", !Ref functionName, ":*" ] ]
+  myS3Bucket:
+    Type: AWS::S3::Bucket
+    DependsOn: s3LambdaInvokePermission
+    Properties:
+      BucketName: !Ref s3BucketToMonitor
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: "s3:ObjectCreated:*"
+            Function: !GetAtt lambdaFunction.Arn
+  s3LambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: "lambda:InvokeFunction" # Required
+      FunctionName: !GetAtt lambdaFunction.Arn # Required
+      Principal: "s3.amazonaws.com" # Required
+      
+      SourceAccount: !Ref "AWS::AccountId"
+      SourceArn: !Join ["", ["arn:aws:s3:::", !Ref s3BucketToMonitor]]
+
+#WHAT RESOURCES TO USE?
+#s3
+### NotificationConfiguration
+#lambda
+#iam

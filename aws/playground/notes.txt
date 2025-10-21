@@ -1,0 +1,183 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Description: "Sample S3 bucket using cloud formation"
+
+Resources:
+  my_s3_bucket: #name fo the resource from a cloudformation standpoint
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: "fca-trn-mycfn-bucket"
+      
+
+   # intrinsic fucntionn - aws cf template for improement of code
+   # !Ref = reference intrisic function
+
+
+
+# AWSTemplateFormatVersion: 2010-09-09
+# # description of the S3 bucket
+# Description: ---
+# # metadata of the CloudFormation
+# Metadata: 
+# # no hardcoded variables (like lambda)
+# Parameters: 
+# # lookups
+# Mappings: 
+# # because eventhough it is IaC, not functions, just definitions
+# # makaka-create tayo ng conditions without if-else
+# Conditions: 
+# # this is where your actual aws resrouces are gonna be defined
+# Resources: 
+# # essentially kung ano yung key-value pair based sa mga resources na na-create mo
+# # useful for NESTED STACKS
+# Outputs:
+
+
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: "ECS Instance using cloudformation"
+
+Parameters: 
+  amiId:
+    Description: "EC2 AMI ID"
+    Type: String
+    Default: ---
+  instanceType:
+    Description: "EC2 Instance Type"
+    Type: String
+    Default: "t3.micro"
+    AllowedValues:
+      - "t3.micro"
+      - "t3.small"
+  securityGroupId:
+    Description: "EC2 Security Group ID"
+    Type: String
+    Default: ---
+  keyPairName:
+    Description: "EC2 KeyPair Name"
+    Type: "String"
+    Default: "aws-trn-2025-oregon"
+  
+#ami //
+#instance type //
+#security group
+#keypair //
+Resources: 
+  LogicalID:
+    Type: AWS::EC2::Instance
+    Properties:
+      BlockDeviceMappings: 
+      ImageId: !Ref amiId
+      InstanceType: !Ref instanceType
+      KeyName: !Ref keyPairName
+      SecurityGroupIds: #default for now
+      Volumes: 
+
+
+Outputs:
+
+
+
+
+friday:
+- never configure manually the resources (sir can CHECKED in the drift), even ip range in the secgroup
+
+
+
+#GENERIC template
+- create a linux web server
+- 
+
+
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: "ECS Instance using cloudformation"
+
+Parameters: 
+  serverType:
+    Description: "EC2 Server Type"
+    Type: String
+    Default: "linux_server"
+    AllowedValues:
+      - "LinuxServer"
+      - "LinuxWebServer"
+  instanceType:
+    Description: "EC2 Instance Type"
+    Type: String
+    Default: "t3.micro"
+    AllowedValues:
+      - "t3.micro"
+      - "t3.small"
+  vpcId:
+    Description: "EC2 VPC ID"
+    Type: String
+    Default: "vpc-05da245b4e604a44c"
+  keyPairName:
+    Description: "EC2 KeyPair Name"
+    Type: String
+    Default: "aws-trn-2025"
+  
+Mappings:
+  ec2AMI:
+    LinuxServer:
+      amiId: ami-0341d95f75f311023
+    LinuxWebServer:
+      amiId: ami-0c2bc33a5e96faa84
+
+Conditions:
+  isLinuxWebServer: !Equals
+    - !Ref serverType
+    - "LinuxWebServer"
+
+Resources: 
+  ec2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      BlockDeviceMappings: 
+        - DeviceName: "/dev/sda1"
+          Ebs:
+            VolumeSize: 8
+      ImageId: 
+        Fn::FindInMap: 
+          - ec2AMI
+          - !Ref serverType
+          - amiId
+      InstanceType: !Ref instanceType
+      KeyName: !Ref keyPairName
+      SecurityGroupIds: 
+        - !GetAtt ec2SecurityGroup.GroupId
+
+  ec2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: "CFN Linux Server Security Group" # Required 
+      GroupName: "cfnLinuxSecGroup"
+      SecurityGroupEgress: 
+        - CidrIp: "0.0.0.0/0"
+          Description: "Allow all outbound"
+          FromPort: -1
+          IpProtocol: "-1"
+          ToPort: -1
+      SecurityGroupIngress: 
+        # - CidrIp: "0.0.0.0/0"
+        #   Description: "Allow HTTP"
+        #   FromPort: 80
+        #   IpProtocol: "tcp"
+        #   ToPort: 80
+        - CidrIp: "0.0.0.0/0"
+          Description: "Allow SSH"
+          FromPort: 22
+          IpProtocol: "tcp"
+          ToPort: 22
+        - !If [isLinuxWebServer, !Ref webServerIngress, AWS::NoValue]
+      VpcId: !Ref vpcId
+
+  webServerIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Condition: isLinuxWebServer
+    Properties:
+      CidrIp: "0.0.0.0/0"
+      Description: "Allow HTTP"
+      FromPort: 80
+      IpProtocol: "tcp"
+      ToPort: 80
